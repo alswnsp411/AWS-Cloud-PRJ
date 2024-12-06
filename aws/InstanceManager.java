@@ -52,6 +52,21 @@ public class InstanceManager {
         }
     }
 
+    public String getInstancePublicDNS(String instanceId) {
+        DescribeInstancesRequest request = new DescribeInstancesRequest()
+                .withInstanceIds(instanceId);
+
+        DescribeInstancesResult response = ec2.describeInstances(request);
+
+        for (Reservation reservation : response.getReservations()) {
+            for (Instance instance : reservation.getInstances()) {
+                System.out.println(instance.getPublicDnsName());
+                return instance.getPublicDnsName();
+            }
+        }
+        return null;
+    }
+
     public void startInstance(String instanceId) {
         System.out.printf("Starting .... %s\n", instanceId);
         DryRunSupportedRequest<StartInstancesRequest> dry_request =
