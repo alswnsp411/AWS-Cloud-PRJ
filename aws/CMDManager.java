@@ -10,7 +10,7 @@ import java.io.InputStreamReader;
 
 public class CMDManager {
 
-    public void runInstance(String instancePublicDNS, String command) {
+    public void runInstance(final String instancePublicDNS, final String command) {
         try {
             JSch jsch = new JSch();
             jsch.addIdentity(KEY_PATH);

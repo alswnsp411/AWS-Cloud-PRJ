@@ -16,11 +16,11 @@ public class awsTest {
     public static void main(String[] args) {
 
         final AmazonEC2 ec2 = AWSClientUtil.getEC2Client();
-        InstanceManager instanceManager = new InstanceManager(ec2);
-        ZoneManager zoneManager = new ZoneManager(ec2);
-        RegionManager regionManager = new RegionManager(ec2);
-        ImageManager imageManager = new ImageManager(ec2);
-        CMDManager cmdManager = new CMDManager();
+        final InstanceManager instanceManager = new InstanceManager(ec2);
+        final ZoneManager zoneManager = new ZoneManager(ec2);
+        final RegionManager regionManager = new RegionManager(ec2);
+        final ImageManager imageManager = new ImageManager(ec2);
+        final CMDManager cmdManager = new CMDManager();
 
         Scanner menu = new Scanner(System.in);
         Scanner id_string = new Scanner(System.in);

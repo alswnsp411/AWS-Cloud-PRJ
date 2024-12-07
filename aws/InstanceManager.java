@@ -20,7 +20,7 @@ public class InstanceManager {
 
     private final AmazonEC2 ec2;
 
-    public InstanceManager(AmazonEC2 ec2Client) {
+    public InstanceManager(final AmazonEC2 ec2Client) {
         this.ec2 = ec2Client;
     }
 
@@ -73,7 +73,7 @@ public class InstanceManager {
         return null;
     }
 
-    public String getInstancePublicDNS(String instanceId) {
+    public String getInstancePublicDNS(final String instanceId) {
         DescribeInstancesRequest request = new DescribeInstancesRequest()
                 .withInstanceIds(instanceId);
 
@@ -88,7 +88,7 @@ public class InstanceManager {
         return null;
     }
 
-    public void startInstance(String instanceId) {
+    public void startInstance(final String instanceId) {
         System.out.printf("Starting .... %s\n", instanceId);
         DryRunSupportedRequest<StartInstancesRequest> dry_request =
                 () -> {
@@ -106,7 +106,7 @@ public class InstanceManager {
         System.out.printf("Successfully started instance %s", instanceId);
     }
 
-    public void stopInstance(String instanceId) {
+    public void stopInstance(final String instanceId) {
         DryRunSupportedRequest<StopInstancesRequest> dry_request =
                 () -> {
                     StopInstancesRequest request = new StopInstancesRequest()
@@ -128,7 +128,7 @@ public class InstanceManager {
     }
 
 
-    public void createInstance(String ami_id) {
+    public void createInstance(final String ami_id) {
 
         RunInstancesRequest run_request = new RunInstancesRequest()
                 .withImageId(ami_id)
@@ -146,7 +146,7 @@ public class InstanceManager {
 
     }
 
-    public void rebootInstance(String instance_id) {
+    public void rebootInstance(final String instance_id) {
 
         System.out.printf("Rebooting .... %s\n", instance_id);
 

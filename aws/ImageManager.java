@@ -11,7 +11,7 @@ public class ImageManager {
 
     private final AmazonEC2 ec2;
 
-    public ImageManager(AmazonEC2 ec2Client) {
+    public ImageManager(final AmazonEC2 ec2Client) {
         this.ec2 = ec2Client;
     }
 

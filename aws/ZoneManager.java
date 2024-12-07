@@ -10,7 +10,7 @@ public class ZoneManager {
 
     private final AmazonEC2 ec2;
 
-    public ZoneManager(AmazonEC2 ec2Client) {
+    public ZoneManager(final AmazonEC2 ec2Client) {
         this.ec2 = ec2Client;
     }
 

@@ -8,7 +8,7 @@ public class RegionManager {
 
     private final AmazonEC2 ec2;
 
-    public RegionManager(AmazonEC2 ec2Client) {
+    public RegionManager(final AmazonEC2 ec2Client) {
         this.ec2 = ec2Client;
     }
 
