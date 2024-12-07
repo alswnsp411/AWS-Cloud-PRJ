@@ -61,10 +61,15 @@ public class InstanceManager {
         for (Reservation reservation : response.getReservations()) {
             for (Instance instance : reservation.getInstances()) {
                 if (instance.getInstanceId().equals(HTCondorMainInstanceId)) {
+                    if(instance.getPublicDnsName().equals("")){
+                        System.out.println("HTCondor main instance is not running. ");
+                        return null;
+                    }
                     return instance.getPublicDnsName();
                 }
             }
         }
+        System.out.println("Cannot found HTCondor main instance");
         return null;
     }
 

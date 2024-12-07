@@ -116,9 +116,9 @@ public class awsTest {
                 case 9:
                     String HTCondorMainInstancePublicDNS= instanceManager.getHTCondorMainInstancePublicDNS();
                     if (HTCondorMainInstancePublicDNS == null) {
-                        System.out.println("Cannot found HTCondor Main Instance");
                         break;
                     }
+                    System.out.println("connect to " + HTCondorMainInstancePublicDNS);
                     cmdManager.runInstance(HTCondorMainInstancePublicDNS, "condor_status");
                     break;
 
