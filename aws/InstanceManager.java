@@ -1,7 +1,5 @@
 package aws;
 
-import static config.configConstants.HTCondorMainInstanceId;
-
 import com.amazonaws.services.ec2.AmazonEC2;
 import com.amazonaws.services.ec2.model.DescribeInstancesRequest;
 import com.amazonaws.services.ec2.model.DescribeInstancesResult;
@@ -54,26 +52,17 @@ public class InstanceManager {
         }
     }
 
-    public String getHTCondorMainInstancePublicDNS(){
-        DescribeInstancesRequest request = new DescribeInstancesRequest();
-        DescribeInstancesResult response = ec2.describeInstances(request);
+    public boolean isInstanceRunning(Instance instance) {
+        String instanceStatus = instance.getState().getName();
+        System.out.println("instance status : " + instanceStatus);
 
-        for (Reservation reservation : response.getReservations()) {
-            for (Instance instance : reservation.getInstances()) {
-                if (instance.getInstanceId().equals(HTCondorMainInstanceId)) {
-                    if(instance.getPublicDnsName().equals("")){
-                        System.out.println("HTCondor main instance is not running. ");
-                        return null;
-                    }
-                    return instance.getPublicDnsName();
-                }
-            }
+        if (instance.getState().getName().equals("running")) {
+            return true;
         }
-        System.out.println("Cannot found HTCondor main instance");
-        return null;
+        return false;
     }
 
-    public String getInstancePublicDNS(final String instanceId) {
+    public Instance getInstance(final String instanceId) {
         DescribeInstancesRequest request = new DescribeInstancesRequest()
                 .withInstanceIds(instanceId);
 
@@ -81,11 +70,24 @@ public class InstanceManager {
 
         for (Reservation reservation : response.getReservations()) {
             for (Instance instance : reservation.getInstances()) {
-                System.out.println(instance.getPublicDnsName());
-                return instance.getPublicDnsName();
+                return instance;
             }
         }
+        System.out.println("Cannot found " + instanceId + " instance");
         return null;
+    }
+
+    public String getInstancePublicDNS(final Instance instance) {
+        if (instance == null) {
+            return null;
+        }
+
+        if (instance.getPublicDnsName().equals("")) {
+            System.out.println("instance is not running. ");
+            return null;
+        }
+
+        return instance.getPublicDnsName();
     }
 
     public void startInstance(final String instanceId) {

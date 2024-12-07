@@ -21,6 +21,7 @@ public class awsTest {
         final RegionManager regionManager = new RegionManager(ec2);
         final ImageManager imageManager = new ImageManager(ec2);
         final CMDManager cmdManager = new CMDManager();
+        final HTCondorManager htCondorManager = new HTCondorManager(instanceManager, cmdManager);
 
         Scanner menu = new Scanner(System.in);
         Scanner id_string = new Scanner(System.in);
@@ -114,12 +115,7 @@ public class awsTest {
                     break;
 
                 case 9:
-                    String HTCondorMainInstancePublicDNS= instanceManager.getHTCondorMainInstancePublicDNS();
-                    if (HTCondorMainInstancePublicDNS == null) {
-                        break;
-                    }
-                    System.out.println("connect to " + HTCondorMainInstancePublicDNS);
-                    cmdManager.runInstance(HTCondorMainInstancePublicDNS, "condor_status");
+                    htCondorManager.runCondorStatus();
                     break;
 
                 case 99:
