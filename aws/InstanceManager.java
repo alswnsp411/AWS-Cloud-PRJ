@@ -1,5 +1,7 @@
 package aws;
 
+import static config.configConstants.HTCondorMainInstanceId;
+
 import com.amazonaws.services.ec2.AmazonEC2;
 import com.amazonaws.services.ec2.model.DescribeInstancesRequest;
 import com.amazonaws.services.ec2.model.DescribeInstancesResult;
@@ -50,6 +52,20 @@ public class InstanceManager {
                 done = true;
             }
         }
+    }
+
+    public String getHTCondorMainInstancePublicDNS(){
+        DescribeInstancesRequest request = new DescribeInstancesRequest();
+        DescribeInstancesResult response = ec2.describeInstances(request);
+
+        for (Reservation reservation : response.getReservations()) {
+            for (Instance instance : reservation.getInstances()) {
+                if (instance.getInstanceId().equals(HTCondorMainInstanceId)) {
+                    return instance.getPublicDnsName();
+                }
+            }
+        }
+        return null;
     }
 
     public String getInstancePublicDNS(String instanceId) {
