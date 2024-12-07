@@ -20,6 +20,7 @@ public class awsTest {
         ZoneManager zoneManager = new ZoneManager(ec2);
         RegionManager regionManager = new RegionManager(ec2);
         ImageManager imageManager = new ImageManager(ec2);
+        CMDManager cmdManager = new CMDManager();
 
         Scanner menu = new Scanner(System.in);
         Scanner id_string = new Scanner(System.in);
@@ -35,6 +36,7 @@ public class awsTest {
             System.out.println("  3. start instance               4. available regions      ");
             System.out.println("  5. stop instance                6. create instance        ");
             System.out.println("  7. reboot instance              8. list images            ");
+            System.out.println("  9. condor_status                       ");
             System.out.println("                                 99. quit                   ");
             System.out.println("------------------------------------------------------------");
 
@@ -109,6 +111,15 @@ public class awsTest {
 
                 case 8:
                     imageManager.listImages();
+                    break;
+
+                case 9:
+                    String HTCondorMainInstancePublicDNS= instanceManager.getHTCondorMainInstancePublicDNS();
+                    if (HTCondorMainInstancePublicDNS == null) {
+                        System.out.println("Cannot found HTCondor Main Instance");
+                        break;
+                    }
+                    cmdManager.runInstance(HTCondorMainInstancePublicDNS, "condor_status");
                     break;
 
                 case 99:
