@@ -22,6 +22,7 @@ public class awsTest {
         final ImageManager imageManager = new ImageManager(ec2);
         final CMDManager cmdManager = new CMDManager();
         final HTCondorManager htCondorManager = new HTCondorManager(instanceManager, cmdManager);
+        final MonitoringManager monitoringManager = new MonitoringManager();
 
         Scanner menu = new Scanner(System.in);
         Scanner id_string = new Scanner(System.in);
@@ -37,7 +38,7 @@ public class awsTest {
             System.out.println("  3. start instance               4. available regions      ");
             System.out.println("  5. stop instance                6. create instance        ");
             System.out.println("  7. reboot instance              8. list images            ");
-            System.out.println("  9. condor_status                       ");
+            System.out.println("  9. condor_status                10. instance CPU Utilization");
             System.out.println("                                 99. quit                   ");
             System.out.println("------------------------------------------------------------");
 
@@ -116,6 +117,17 @@ public class awsTest {
 
                 case 9:
                     htCondorManager.runCondorStatus();
+                    break;
+
+                case 10:
+                    System.out.print("Enter EC2 instance id: ");
+                    if (id_string.hasNext()) {
+                        instance_id = id_string.nextLine();
+                    }
+
+                    if (!instance_id.trim().isEmpty()) {
+                        monitoringManager.getEC2CPUUtilization(instance_id);
+                    }
                     break;
 
                 case 99:
