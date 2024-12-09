@@ -38,7 +38,7 @@ public class MonitoringManager {
         System.out.println("                                                            ");
         System.out.println("                                                            ");
         System.out.println("------------------------------------------------------------");
-        System.out.println("                  Monitoring Menu               ");
+        System.out.println("                        Monitoring Menu                     ");
         System.out.println("------------------------------------------------------------");
         System.out.println("  1. CPU utilization                2. Network in        ");
         System.out.println("  3. Network out                    4. Network packets in");
@@ -61,6 +61,7 @@ public class MonitoringManager {
             if (scanner.hasNextInt()) {
                 menu = scanner.nextInt();
             } else {
+                System.out.println("Invalid input");
                 scanner.nextLine();
             }
 
@@ -70,14 +71,32 @@ public class MonitoringManager {
             if (menu == 2) {
                 return getCustomRequest(instanceId, "NetworkIn", startTime, endTime);
             }
+            if (menu == 3) {
+                return getCustomRequest(instanceId, "NetworkOut", startTime, endTime);
+            }
+            if (menu == 4) {
+                return getCustomRequest(instanceId, "NetworkPacketsIn", startTime, endTime);
+            }
+            if (menu == 5) {
+                return getCustomRequest(instanceId, "NetworkPacketsOut", startTime, endTime);
+            }
+            if (menu == 6) {
+                return getCustomRequest(instanceId, "MetadataNoToken", startTime, endTime);
+            }
+            if (menu == 7) {
+                return getCustomRequest(instanceId, "CPUCreditUsage", startTime, endTime);
+            }
+            if (menu == 8) {
+                return getCustomRequest(instanceId, "CPUCreditBalance", startTime, endTime);
+            }
             if (menu == 99) {
                 return null;
             }
         }
     }
 
-    private GetMetricStatisticsRequest getCustomRequest(String instanceId, String metricName, Date startTime,
-                                                        Date endTime) {
+    private GetMetricStatisticsRequest getCustomRequest(String instanceId, String metricName,
+                                                        Date startTime, Date endTime) {
         return new GetMetricStatisticsRequest()
                 .withStartTime(startTime)
                 .withEndTime(endTime)
