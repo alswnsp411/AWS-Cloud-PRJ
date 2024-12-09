@@ -42,14 +42,7 @@ public class awsTest {
             System.out.println("                                 99. quit                   ");
             System.out.println("------------------------------------------------------------");
 
-            System.out.print("Enter an integer: ");
-
-            if (menu.hasNextInt()) {
-                number = menu.nextInt();
-            } else {
-                System.out.println("concentration!");
-                break;
-            }
+            number = getMenu(menu);
 
             String instance_id = "";
 
@@ -139,8 +132,17 @@ public class awsTest {
                 default:
                     System.out.println("concentration!");
             }
-
         }
+    }
+
+    private static int getMenu(Scanner scanner){
+        System.out.print("Enter an integer: ");
+
+        if (scanner.hasNextInt()) {
+            return scanner.nextInt();
+        }
+        scanner.nextLine();  //버퍼 비우기
+        return -1;
     }
 
 }
