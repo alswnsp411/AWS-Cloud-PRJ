@@ -18,14 +18,14 @@ public class MonitoringManager {
     }
 
     public void getEC2CPUUtilization(String instanceId) {
-        long offsetInMilliseconds = 24 * 60 * 60000; // 최근 하루 데이터
+        long offsetInMilliseconds =  3*24 * 60 * 60000; // 최근 3일 데이터
         Date endTime = new Date();
         Date startTime = new Date(endTime.getTime() - offsetInMilliseconds);
 
         GetMetricStatisticsRequest request = new GetMetricStatisticsRequest()
                 .withStartTime(startTime)
                 .withEndTime(endTime)
-                .withPeriod(60)
+                .withPeriod(300)  //단위: 초
                 .withNamespace("AWS/EC2")
                 .withMetricName("CPUUtilization")
                 .withStatistics("Average")
@@ -39,9 +39,11 @@ public class MonitoringManager {
         if (datapoints.isEmpty()) {
             System.out.println("No metrics data found for instance: " + instanceId);
         } else {
-            Collections.sort(datapoints, Comparator.comparing(Datapoint::getTimestamp));
+            Collections.sort(datapoints, Comparator.comparing(Datapoint::getTimestamp).reversed());
+            int limit= Math.min(datapoints.size(), 1440);  //데이터 포인트 개수 제한
+            List<Datapoint> limitedDatapoints= datapoints.subList(0, limit);
 
-            for (Datapoint datapoint : datapoints) {
+            for (Datapoint datapoint : limitedDatapoints) {
                 System.out.printf("Timestamp: %s, Average CPU Utilization: %.2f%%%n",
                         datapoint.getTimestamp(), datapoint.getAverage());
             }
