@@ -18,6 +18,7 @@ public class HTCondorManager {
         Instance HTCondorMainInstance = instanceManager.getInstance(HTCondorMainInstanceId);
         boolean isInstanceRun = instanceManager.isInstanceRunning(HTCondorMainInstance);
         if (!isInstanceRun) {
+            System.out.println("Check the main condor instance");
             return;
         }
 
