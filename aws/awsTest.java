@@ -29,19 +29,7 @@ public class awsTest {
         int number = 0;
 
         while (true) {
-            System.out.println("                                                            ");
-            System.out.println("                                                            ");
-            System.out.println("------------------------------------------------------------");
-            System.out.println("           Amazon AWS Control Panel using SDK               ");
-            System.out.println("------------------------------------------------------------");
-            System.out.println("  1. list instance                2. available zones        ");
-            System.out.println("  3. start instance               4. available regions      ");
-            System.out.println("  5. stop instance                6. create instance        ");
-            System.out.println("  7. reboot instance              8. list images            ");
-            System.out.println("  9. condor_status                10. instance CPU Utilization");
-            System.out.println("                                 99. quit                   ");
-            System.out.println("------------------------------------------------------------");
-
+            printMenu();
             number = getMenu(menu);
 
             String instance_id = "";
@@ -133,6 +121,21 @@ public class awsTest {
                     System.out.println("concentration!");
             }
         }
+    }
+
+    private static void printMenu(){
+        System.out.println("                                                            ");
+        System.out.println("                                                            ");
+        System.out.println("------------------------------------------------------------");
+        System.out.println("           Amazon AWS Control Panel using SDK               ");
+        System.out.println("------------------------------------------------------------");
+        System.out.println("  1. list instance                2. available zones        ");
+        System.out.println("  3. start instance               4. available regions      ");
+        System.out.println("  5. stop instance                6. create instance        ");
+        System.out.println("  7. reboot instance              8. list images            ");
+        System.out.println("  9. condor_status                10. instance CPU Utilization");
+        System.out.println("                                  99. quit                   ");
+        System.out.println("------------------------------------------------------------");
     }
 
     private static int getMenu(Scanner scanner){
