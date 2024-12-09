@@ -126,7 +126,7 @@ public class MonitoringManager {
                     .orElse(0.0);
 
             System.out.println();
-            System.out.println(response.getLabel());
+            System.out.println(response.getLabel()+" ("+response.getDatapoints().get(0).getUnit()+")");
 
             String currentDay = "";
             for (Datapoint datapoint : limitedDatapoints) {
@@ -141,10 +141,15 @@ public class MonitoringManager {
                 }
 
                 double averageDatapoint = datapoint.getAverage();
-                int barLength = (int) Math.round(averageDatapoint / maxAverage * 50);
+                int barLength = (int) Math.round(averageDatapoint / maxAverage * 45);
                 String bar = new String(new char[barLength]).replace("\0", "#");
 
-                System.out.printf("%s | %-50s %.2f%n", timePart, bar, averageDatapoint);
+                if(averageDatapoint>20){
+                    System.out.printf("%s | %-45s %.0f%n", timePart, bar, averageDatapoint);
+                }else{
+                    System.out.printf("%s | %-45s %.2f%n", timePart, bar, averageDatapoint);
+                }
+
             }
         }
     }
