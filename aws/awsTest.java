@@ -91,7 +91,7 @@ public class awsTest {
                     instanceId = getInputString(id_string, "Enter EC2 instance id: ");
 
                     if (instanceId != null && !instanceId.isEmpty()) {
-                        monitoringManager.getEC2CPUUtilization(instanceId);
+                        monitoringManager.getMonitoring(instanceId);
                     }
                     break;
 
@@ -117,7 +117,7 @@ public class awsTest {
         System.out.println("  3. start instance               4. available regions      ");
         System.out.println("  5. stop instance                6. create instance        ");
         System.out.println("  7. reboot instance              8. list images            ");
-        System.out.println("  9. condor_status                10. instance CPU Utilization");
+        System.out.println("  9. condor_status                10. monitoring");
         System.out.println("                                  99. quit                   ");
         System.out.println("------------------------------------------------------------");
     }

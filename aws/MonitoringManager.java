@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Scanner;
 
 public class MonitoringManager {
     private final AmazonCloudWatch cloudWatch;
@@ -17,22 +18,79 @@ public class MonitoringManager {
         this.cloudWatch = AmazonCloudWatchClientBuilder.defaultClient();
     }
 
-    public void getEC2CPUUtilization(String instanceId) {
+    public void getMonitoring(String instanceId) {
+
+        Scanner scanner = new Scanner(System.in);
+
+        while (true) {
+            printMonitoringMenu();
+            GetMetricStatisticsRequest request = getMenuRequest(scanner, instanceId);
+            if (request == null) {
+                break;
+            }
+            printMonitoringResult(instanceId, request);
+        }
+
+//        scanner.close();
+    }
+
+    private static void printMonitoringMenu() {
+        System.out.println("                                                            ");
+        System.out.println("                                                            ");
+        System.out.println("------------------------------------------------------------");
+        System.out.println("                  Monitoring Menu               ");
+        System.out.println("------------------------------------------------------------");
+        System.out.println("  1. CPU utilization                2. Network in        ");
+        System.out.println("  3. Network out                    4. Network packets in");
+        System.out.println("  5. Network packets out            6. Metadata no token");
+        System.out.println("  7. CPU credit usage               8. CPU credit balance");
+        System.out.println("  99. quit                   ");
+        System.out.println("------------------------------------------------------------");
+    }
+
+    private GetMetricStatisticsRequest getMenuRequest(Scanner scanner, String instanceId) {
         long offsetInMilliseconds = 3 * 24 * 60 * 60000; // 최근 3일 데이터
         Date endTime = new Date();
         Date startTime = new Date(endTime.getTime() - offsetInMilliseconds);
 
-        GetMetricStatisticsRequest request = new GetMetricStatisticsRequest()
+        int menu = 0;
+
+        while (true) {
+            System.out.print("Enter an integer: ");
+
+            if (scanner.hasNextInt()) {
+                menu = scanner.nextInt();
+            } else {
+                scanner.nextLine();
+            }
+
+            if (menu == 1) {
+                return getCustomRequest(instanceId, "CPUUtilization", startTime, endTime);
+            }
+            if (menu == 2) {
+                return getCustomRequest(instanceId, "NetworkIn", startTime, endTime);
+            }
+            if (menu == 99) {
+                return null;
+            }
+        }
+    }
+
+    private GetMetricStatisticsRequest getCustomRequest(String instanceId, String metricName, Date startTime,
+                                                        Date endTime) {
+        return new GetMetricStatisticsRequest()
                 .withStartTime(startTime)
                 .withEndTime(endTime)
                 .withPeriod(300)  //단위: 초
                 .withNamespace("AWS/EC2")
-                .withMetricName("CPUUtilization")
+                .withMetricName(metricName)
                 .withStatistics("Average")
                 .withDimensions(new com.amazonaws.services.cloudwatch.model.Dimension()
                         .withName("InstanceId")
                         .withValue(instanceId));
+    }
 
+    private void printMonitoringResult(String instanceId, GetMetricStatisticsRequest request) {
         GetMetricStatisticsResult response = cloudWatch.getMetricStatistics(request);
         List<Datapoint> datapoints = response.getDatapoints();
 
@@ -43,8 +101,13 @@ public class MonitoringManager {
             int limit = Math.min(datapoints.size(), 1440);  //데이터 포인트 개수 제한
             List<Datapoint> limitedDatapoints = datapoints.subList(0, limit);
 
+            double maxAverage = limitedDatapoints.stream()
+                    .mapToDouble(Datapoint::getAverage)
+                    .max()
+                    .orElse(0.0);
+
             System.out.println();
-            System.out.println("Average CPU Utilization(%)");
+            System.out.println(response.getLabel());
 
             String currentDay = "";
             for (Datapoint datapoint : limitedDatapoints) {
@@ -58,13 +121,13 @@ public class MonitoringManager {
                     System.out.printf("Timestamp: %s%n", currentDay);
                 }
 
-                double cpuUtilization = datapoint.getAverage();
-                int barLength = (int) Math.round(cpuUtilization / 2);
+                double averageDatapoint = datapoint.getAverage();
+                int barLength = (int) Math.round(averageDatapoint / maxAverage * 50);
                 String bar = new String(new char[barLength]).replace("\0", "#");
 
-
-                System.out.printf("%s | %-50s %.2f%%%n", timePart, bar, cpuUtilization);
+                System.out.printf("%s | %-50s %.2f%n", timePart, bar, averageDatapoint);
             }
         }
     }
+
 }
