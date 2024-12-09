@@ -56,10 +56,7 @@ public class InstanceManager {
         String instanceStatus = instance.getState().getName();
         System.out.println("instance status : " + instanceStatus);
 
-        if (instance.getState().getName().equals("running")) {
-            return true;
-        }
-        return false;
+        return instance.getState().getName().equals("running");
     }
 
     public Instance getInstance(final String instanceId) {
