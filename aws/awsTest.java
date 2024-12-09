@@ -32,7 +32,7 @@ public class awsTest {
             printMenu();
             number = getMenu(menu);
 
-            String instance_id = "";
+            String instanceId = "";
 
             switch (number) {
                 case 1:
@@ -44,13 +44,10 @@ public class awsTest {
                     break;
 
                 case 3:
-                    System.out.print("Enter instance id: ");
-                    if (id_string.hasNext()) {
-                        instance_id = id_string.nextLine();
-                    }
+                    instanceId = getInputString(id_string, "Enter instance id: ");
 
-                    if (!instance_id.trim().isEmpty()) {
-                        instanceManager.startInstance(instance_id);
+                    if (instanceId != null && !instanceId.isEmpty()) {
+                        instanceManager.startInstance(instanceId);
                     }
                     break;
 
@@ -59,36 +56,26 @@ public class awsTest {
                     break;
 
                 case 5:
-                    System.out.print("Enter instance id: ");
-                    if (id_string.hasNext()) {
-                        instance_id = id_string.nextLine();
-                    }
+                    instanceId = getInputString(id_string, "Enter instance id: ");
 
-                    if (!instance_id.trim().isEmpty()) {
-                        instanceManager.stopInstance(instance_id);
+                    if (instanceId != null && !instanceId.isEmpty()) {
+                        instanceManager.stopInstance(instanceId);
                     }
                     break;
 
                 case 6:
-                    System.out.print("Enter ami id: ");
-                    String ami_id = "";
-                    if (id_string.hasNext()) {
-                        ami_id = id_string.nextLine();
-                    }
+                    String amiId = getInputString(id_string, "Enter ami id: ");
 
-                    if (!ami_id.trim().isEmpty()) {
-                        instanceManager.createInstance(ami_id);
+                    if (amiId != null && !amiId.isEmpty()) {
+                        instanceManager.createInstance(amiId);
                     }
                     break;
 
                 case 7:
-                    System.out.print("Enter instance id: ");
-                    if (id_string.hasNext()) {
-                        instance_id = id_string.nextLine();
-                    }
+                    instanceId = getInputString(id_string, "Enter instance id: ");
 
-                    if (!instance_id.trim().isEmpty()) {
-                        instanceManager.rebootInstance(instance_id);
+                    if (instanceId != null && !instanceId.isEmpty()) {
+                        instanceManager.rebootInstance(instanceId);
                     }
                     break;
 
@@ -101,13 +88,10 @@ public class awsTest {
                     break;
 
                 case 10:
-                    System.out.print("Enter EC2 instance id: ");
-                    if (id_string.hasNext()) {
-                        instance_id = id_string.nextLine();
-                    }
+                    instanceId = getInputString(id_string, "Enter EC2 instance id: ");
 
-                    if (!instance_id.trim().isEmpty()) {
-                        monitoringManager.getEC2CPUUtilization(instance_id);
+                    if (instanceId != null && !instanceId.isEmpty()) {
+                        monitoringManager.getEC2CPUUtilization(instanceId);
                     }
                     break;
 
@@ -123,7 +107,7 @@ public class awsTest {
         }
     }
 
-    private static void printMenu(){
+    private static void printMenu() {
         System.out.println("                                                            ");
         System.out.println("                                                            ");
         System.out.println("------------------------------------------------------------");
@@ -138,7 +122,7 @@ public class awsTest {
         System.out.println("------------------------------------------------------------");
     }
 
-    private static int getMenu(Scanner scanner){
+    private static int getMenu(Scanner scanner) {
         System.out.print("Enter an integer: ");
 
         if (scanner.hasNextInt()) {
@@ -146,6 +130,14 @@ public class awsTest {
         }
         scanner.nextLine();  //버퍼 비우기
         return -1;
+    }
+
+    private static String getInputString(Scanner scanner, String prompt) {
+        System.out.print(prompt);
+        if (scanner.hasNext()) {
+            return scanner.nextLine().trim();
+        }
+        return null;
     }
 
 }
