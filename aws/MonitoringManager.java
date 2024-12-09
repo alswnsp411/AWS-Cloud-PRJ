@@ -18,7 +18,7 @@ public class MonitoringManager {
     }
 
     public void getEC2CPUUtilization(String instanceId) {
-        long offsetInMilliseconds =  3*24 * 60 * 60000; // 최근 3일 데이터
+        long offsetInMilliseconds = 3 * 24 * 60 * 60000; // 최근 3일 데이터
         Date endTime = new Date();
         Date startTime = new Date(endTime.getTime() - offsetInMilliseconds);
 
@@ -40,12 +40,30 @@ public class MonitoringManager {
             System.out.println("No metrics data found for instance: " + instanceId);
         } else {
             Collections.sort(datapoints, Comparator.comparing(Datapoint::getTimestamp).reversed());
-            int limit= Math.min(datapoints.size(), 1440);  //데이터 포인트 개수 제한
-            List<Datapoint> limitedDatapoints= datapoints.subList(0, limit);
+            int limit = Math.min(datapoints.size(), 1440);  //데이터 포인트 개수 제한
+            List<Datapoint> limitedDatapoints = datapoints.subList(0, limit);
 
+            System.out.println();
+            System.out.println("Average CPU Utilization(%)");
+
+            String currentDay = "";
             for (Datapoint datapoint : limitedDatapoints) {
-                System.out.printf("Timestamp: %s, Average CPU Utilization: %.2f%%%n",
-                        datapoint.getTimestamp(), datapoint.getAverage());
+                String fullTimestamp = datapoint.getTimestamp().toString();
+                String datePart = fullTimestamp.substring(0, 10);
+                String timePart = fullTimestamp.substring(11, 19);
+
+                if (!currentDay.equals(datePart)) {
+                    currentDay = datePart;
+                    System.out.println();
+                    System.out.printf("Timestamp: %s%n", currentDay);
+                }
+
+                double cpuUtilization = datapoint.getAverage();
+                int barLength = (int) Math.round(cpuUtilization / 2);
+                String bar = new String(new char[barLength]).replace("\0", "#");
+
+
+                System.out.printf("%s | %-50s %.2f%%%n", timePart, bar, cpuUtilization);
             }
         }
     }
